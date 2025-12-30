@@ -304,7 +304,15 @@ export default {
       this.isSubmitting = true
 
       try {
-        await submitResponse(cleanData, technicalData)
+        // Démarrer un timer de 2 secondes minimum
+        const minDelay = new Promise(resolve => setTimeout(resolve, 2000))
+
+        // Envoyer les données
+        const submitPromise = submitResponse(cleanData, technicalData)
+
+        // Attendre que les 2 soient terminés (minimum 2 secondes)
+        await Promise.all([submitPromise, minDelay])
+
         this.showCommentStep = false
         this.submitted = true
 
