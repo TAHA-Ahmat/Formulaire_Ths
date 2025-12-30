@@ -24,6 +24,10 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Debug: Log de la variable d'environnement
+    console.log('GOOGLE_SCRIPT_URL:', GOOGLE_SCRIPT_URL ? 'Configured' : 'MISSING');
+    console.log('Full URL:', GOOGLE_SCRIPT_URL);
+
     // Vérifier que l'URL Google Apps Script est configurée
     if (!GOOGLE_SCRIPT_URL) {
       return res.status(500).json({
