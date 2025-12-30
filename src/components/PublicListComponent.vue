@@ -1,13 +1,6 @@
 <template>
   <div class="public-list-container">
-    <div class="list-header">
-      <h2>Liste des réponses</h2>
-      <p class="list-description">
-        Nombre total de réponses : <strong>{{ totalCount }}</strong>
-      </p>
-    </div>
-
-    <div v-if="loading" class="loading-overlay">
+    <div v-if="loading" class="loading-screen">
       <div class="loading-box">
         <img src="/logoths.jpg" alt="THS Logo" class="loading-logo" />
         <div class="spinner-large"></div>
@@ -21,12 +14,27 @@
       <button @click="loadResponses" class="btn btn-secondary">Réessayer</button>
     </div>
 
-    <div v-else-if="responses.length === 0" class="alert alert-info">
-      <p>Aucune réponse pour le moment. Soyez le premier à répondre !</p>
-      <router-link to="/" class="btn btn-primary">Remplir le formulaire</router-link>
+    <div v-else-if="responses.length === 0">
+      <div class="list-header">
+        <h2>Liste des réponses</h2>
+        <p class="list-description">
+          Nombre total de réponses : <strong>0</strong>
+        </p>
+      </div>
+      <div class="alert alert-info">
+        <p>Aucune réponse pour le moment. Soyez le premier à répondre !</p>
+        <router-link to="/" class="btn btn-primary">Remplir le formulaire</router-link>
+      </div>
     </div>
 
-    <div v-else class="responses-container">
+    <div v-else>
+      <div class="list-header">
+        <h2>Liste des réponses</h2>
+        <p class="list-description">
+          Nombre total de réponses : <strong>{{ totalCount }}</strong>
+        </p>
+      </div>
+      <div class="responses-container">
       <div class="table-responsive">
         <table class="responses-table">
           <thead>
@@ -62,6 +70,7 @@
       <div class="actions">
         <button @click="loadResponses" class="btn btn-secondary">Actualiser</button>
         <router-link to="/" class="btn btn-primary">Remplir le formulaire</router-link>
+      </div>
       </div>
     </div>
   </div>
@@ -136,27 +145,20 @@ export default {
   font-size: 1.3rem;
 }
 
-/* Loading overlay avec logo THS */
-.loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+/* Loading screen avec logo THS */
+.loading-screen {
+  background: white;
+  padding: 4rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999;
-  backdrop-filter: blur(4px);
+  min-height: 500px;
 }
 
 .loading-box {
-  background: white;
-  padding: 3rem 4rem;
-  border-radius: 12px;
   text-align: center;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
   animation: fadeInScale 0.3s ease-out;
   max-width: 400px;
 }

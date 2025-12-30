@@ -7,7 +7,7 @@
       <router-link to="/public" class="btn btn-secondary">Voir les réponses</router-link>
     </div>
 
-    <div v-else-if="showCommentStep" class="comment-step">
+    <div v-else-if="showCommentStep && !isSubmitting" class="comment-step">
       <div class="comment-step-header">
         <div class="success-icon">✓</div>
         <h3>Merci !</h3>
@@ -51,18 +51,13 @@
       </div>
 
       <div class="comment-actions">
-        <button type="button" @click="finalSubmit" :disabled="isSubmitting" class="btn btn-primary btn-large">
-          <span v-if="!isSubmitting">Envoyer et terminer</span>
-          <span v-else class="loading-content">
-            <span class="spinner"></span>
-            <span>Envoi en cours...</span>
-          </span>
+        <button type="button" @click="finalSubmit" class="btn btn-primary btn-large">
+          Envoyer et terminer
         </button>
       </div>
     </div>
 
-    <!-- Overlay de chargement -->
-    <div v-if="isSubmitting" class="loading-overlay">
+    <div v-else-if="isSubmitting" class="loading-screen">
       <div class="loading-box">
         <div class="spinner-large"></div>
         <p class="loading-text">Enregistrement en cours...</p>
@@ -633,26 +628,19 @@ legend {
   to { transform: rotate(360deg); }
 }
 
-.loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+.loading-screen {
+  background: white;
+  padding: 4rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999;
-  backdrop-filter: blur(4px);
+  min-height: 400px;
 }
 
 .loading-box {
-  background: white;
-  padding: 3rem 4rem;
-  border-radius: 12px;
   text-align: center;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
   animation: fadeInScale 0.3s ease-out;
 }
 
