@@ -7,8 +7,5 @@
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ],
-  "env": {
-    "GOOGLE_SCRIPT_URL": "@google-script-url"
-  }
+  ]
 }
