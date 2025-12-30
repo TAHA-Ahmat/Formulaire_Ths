@@ -52,8 +52,21 @@
 
       <div class="comment-actions">
         <button type="button" @click="finalSubmit" :disabled="isSubmitting" class="btn btn-primary btn-large">
-          {{ isSubmitting ? 'Envoi en cours...' : 'Valider et envoyer' }}
+          <span v-if="!isSubmitting">Valider et envoyer</span>
+          <span v-else class="loading-content">
+            <span class="spinner"></span>
+            <span>Envoi en cours...</span>
+          </span>
         </button>
+      </div>
+    </div>
+
+    <!-- Overlay de chargement -->
+    <div v-if="isSubmitting" class="loading-overlay">
+      <div class="loading-box">
+        <div class="spinner-large"></div>
+        <p class="loading-text">Enregistrement en cours...</p>
+        <p class="loading-subtext">Veuillez patienter</p>
       </div>
     </div>
 
@@ -596,5 +609,84 @@ legend {
 .btn-large {
   padding: 1rem 3rem;
   font-size: 1.1rem;
+}
+
+/* Loader et spinner */
+.loading-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+}
+
+.loading-box {
+  background: white;
+  padding: 3rem 4rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  animation: fadeInScale 0.3s ease-out;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.spinner-large {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #e2e8f0;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  margin: 0 auto 1.5rem;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0 0 0.5rem 0;
+}
+
+.loading-subtext {
+  font-size: 0.95rem;
+  color: #718096;
+  margin: 0;
 }
 </style>

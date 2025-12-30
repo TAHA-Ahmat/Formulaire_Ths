@@ -66,13 +66,22 @@ function doPost(e) {
 
 /**
  * Vérifie si une personne a déjà répondu
+ * OPTIMISÉ : Lit seulement les colonnes Nom et Prénom
  */
 function checkIfExists(nom, prenom) {
   const sheet = getSheet();
-  const data = sheet.getDataRange().getValues();
+  const lastRow = sheet.getLastRow();
 
-  // Ignorer la ligne d'en-tête
-  for (let i = 1; i < data.length; i++) {
+  // Si pas de données (seulement l'en-tête)
+  if (lastRow <= 1) {
+    return jsonResponse({ exists: false });
+  }
+
+  // Lire seulement les colonnes 1 et 2 (Nom, Prénom) des lignes de données
+  const data = sheet.getRange(2, 1, lastRow - 1, 2).getValues();
+
+  // Vérifier si nom + prénom existent
+  for (let i = 0; i < data.length; i++) {
     const rowNom = data[i][0];
     const rowPrenom = data[i][1];
 
@@ -96,19 +105,26 @@ function submitResponseFromGet(params) {
 
 /**
  * Soumet une nouvelle réponse
+ * OPTIMISÉ : Vérification de doublon plus rapide
  */
 function submitResponse(data) {
   // Vérifier doublon
   const sheet = getSheet();
-  const existingData = sheet.getDataRange().getValues();
+  const lastRow = sheet.getLastRow();
 
-  for (let i = 1; i < existingData.length; i++) {
-    if (existingData[i][0].toLowerCase() === data.nom.toLowerCase() &&
-        existingData[i][1].toLowerCase() === data.prenom.toLowerCase()) {
-      return jsonResponse({
-        success: false,
-        message: 'Vous avez déjà répondu à ce formulaire'
-      });
+  // Si des données existent, vérifier les doublons
+  if (lastRow > 1) {
+    // Lire seulement les colonnes Nom et Prénom
+    const existingData = sheet.getRange(2, 1, lastRow - 1, 2).getValues();
+
+    for (let i = 0; i < existingData.length; i++) {
+      if (existingData[i][0].toLowerCase() === data.nom.toLowerCase() &&
+          existingData[i][1].toLowerCase() === data.prenom.toLowerCase()) {
+        return jsonResponse({
+          success: false,
+          message: 'Vous avez déjà répondu à ce formulaire'
+        });
+      }
     }
   }
 
@@ -145,20 +161,33 @@ function submitResponse(data) {
 
 /**
  * Récupère la liste publique (sans commentaires)
+ * OPTIMISÉ : Lit seulement les colonnes nécessaires (Nom, Prénom, Service, Date)
  */
 function getPublicList() {
   const sheet = getSheet();
-  const data = sheet.getDataRange().getValues();
+  const lastRow = sheet.getLastRow();
 
-  // Ignorer la ligne d'en-tête
+  // Si pas de données (seulement l'en-tête)
+  if (lastRow <= 1) {
+    return jsonResponse({
+      success: true,
+      responses: []
+    });
+  }
+
+  // Lire seulement les colonnes 1, 2, 3 (Nom, Prénom, Service)
+  const basicData = sheet.getRange(2, 1, lastRow - 1, 3).getValues();
+  // Lire la colonne 18 (Date/Heure)
+  const timestamps = sheet.getRange(2, 18, lastRow - 1, 1).getValues();
+
   const responses = [];
 
-  for (let i = 1; i < data.length; i++) {
+  for (let i = 0; i < basicData.length; i++) {
     responses.push({
-      nom: data[i][0],
-      prenom: data[i][1],
-      service: data[i][2],
-      timestamp: data[i][17] // Date/heure (nouvelle position)
+      nom: basicData[i][0],
+      prenom: basicData[i][1],
+      service: basicData[i][2],
+      timestamp: timestamps[i][0]
     });
   }
 
