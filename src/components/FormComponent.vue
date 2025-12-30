@@ -9,9 +9,8 @@
 
     <div v-else-if="showCommentStep && !isSubmitting" class="comment-step">
       <div class="comment-step-header">
-        <div class="success-icon">✓</div>
-        <h3>Merci !</h3>
-        <p class="comment-step-subtitle">Dernière étape : décrivez la connexion actuelle (optionnel)</p>
+        <h3>Dernière étape</h3>
+        <p class="comment-step-subtitle">Décrivez votre expérience avec la connexion Internet (optionnel)</p>
       </div>
 
       <div class="comment-examples">
@@ -510,24 +509,14 @@ legend {
 .comment-step-header {
   text-align: center;
   margin-bottom: 2.5rem;
-}
-
-.success-icon {
-  display: inline-block;
-  width: 60px;
-  height: 60px;
-  line-height: 60px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  font-size: 2rem;
-  margin-bottom: 1rem;
+  padding-top: 1rem;
 }
 
 .comment-step-header h3 {
-  margin: 0.5rem 0;
+  margin: 0 0 1rem 0;
   color: #2d3748;
-  font-size: 1.8rem;
+  font-size: 2rem;
+  font-weight: 700;
 }
 
 .comment-step-subtitle {
