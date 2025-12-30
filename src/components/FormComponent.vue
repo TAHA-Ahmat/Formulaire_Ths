@@ -11,7 +11,7 @@
       <div class="comment-step-header">
         <div class="success-icon">✓</div>
         <h3>Merci !</h3>
-        <p class="comment-step-subtitle">Merci de décrire la connexion actuelle</p>
+        <p class="comment-step-subtitle">Dernière étape : décrivez la connexion actuelle (optionnel)</p>
       </div>
 
       <div class="comment-examples">
@@ -52,7 +52,7 @@
 
       <div class="comment-actions">
         <button type="button" @click="finalSubmit" :disabled="isSubmitting" class="btn btn-primary btn-large">
-          <span v-if="!isSubmitting">Valider et envoyer</span>
+          <span v-if="!isSubmitting">Envoyer et terminer</span>
           <span v-else class="loading-content">
             <span class="spinner"></span>
             <span>Envoi en cours...</span>
@@ -211,7 +211,7 @@
 
       <div class="form-actions">
         <button type="submit" :disabled="isSubmitting" class="btn btn-primary">
-          {{ isSubmitting ? 'Envoi en cours...' : 'Envoyer le diagnostic' }}
+          {{ isSubmitting ? 'Vérification...' : 'Suivant' }}
         </button>
       </div>
 

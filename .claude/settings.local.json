@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm:*)",
+      "Bash(VERCEL_PROJECT_NAME=formulaire-connexion-ths vercel:*)",
+      "Bash(vercel:*)",
+      "WebFetch(domain:formulaire-ths-ynmy.vercel.app)",
+      "Bash(wget:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "WebFetch(domain:script.google.com)",
+      "WebFetch(domain:script.googleusercontent.com)"
+    ]
+  }
+}

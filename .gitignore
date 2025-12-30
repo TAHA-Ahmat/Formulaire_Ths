@@ -32,3 +32,6 @@ dist-ssr
 # Build
 build
 .vercel
+
+.vercel
+.env*.local

@@ -7,8 +7,13 @@
       </p>
     </div>
 
-    <div v-if="loading" class="loading">
-      <p>Chargement des réponses...</p>
+    <div v-if="loading" class="loading-overlay">
+      <div class="loading-box">
+        <img src="/logoths.jpg" alt="THS Logo" class="loading-logo" />
+        <div class="spinner-large"></div>
+        <p class="loading-text">Chargement des réponses...</p>
+        <p class="loading-subtext">Veuillez patienter</p>
+      </div>
     </div>
 
     <div v-else-if="error" class="alert alert-error">
@@ -131,10 +136,75 @@ export default {
   font-size: 1.3rem;
 }
 
-.loading {
+/* Loading overlay avec logo THS */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+}
+
+.loading-box {
+  background: white;
+  padding: 3rem 4rem;
+  border-radius: 12px;
   text-align: center;
-  padding: 3rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  animation: fadeInScale 0.3s ease-out;
+  max-width: 400px;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.loading-logo {
+  width: 100px;
+  height: auto;
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.spinner-large {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #e2e8f0;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  margin: 0 auto 1.5rem;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0 0 0.5rem 0;
+}
+
+.loading-subtext {
+  font-size: 0.95rem;
   color: #718096;
+  margin: 0;
 }
 
 .responses-container {
