@@ -7,6 +7,56 @@
       <router-link to="/public" class="btn btn-secondary">Voir les réponses</router-link>
     </div>
 
+    <div v-else-if="showCommentStep" class="comment-step">
+      <div class="comment-step-header">
+        <div class="success-icon">✓</div>
+        <h3>Merci !</h3>
+        <p class="comment-step-subtitle">Merci de décrire la connexion actuelle</p>
+      </div>
+
+      <div class="comment-examples">
+        <p class="examples-label">Exemples de commentaires :</p>
+        <div class="examples-buttons">
+          <button type="button" @click="useExample('La connexion est très lente, surtout le matin')" class="btn-example">
+            La connexion est très lente, surtout le matin
+          </button>
+          <button type="button" @click="useExample('Coupures fréquentes plusieurs fois par jour')" class="btn-example">
+            Coupures fréquentes plusieurs fois par jour
+          </button>
+          <button type="button" @click="useExample('Impossible de télécharger ou envoyer des fichiers lourds')" class="btn-example">
+            Impossible de télécharger/envoyer des fichiers lourds
+          </button>
+          <button type="button" @click="useExample('La connexion est stable et satisfaisante')" class="btn-example">
+            La connexion est stable et satisfaisante
+          </button>
+          <button type="button" @click="useExample('Aucun problème particulier à signaler')" class="btn-example">
+            Aucun problème particulier à signaler
+          </button>
+        </div>
+      </div>
+
+      <div class="comment-textarea-container">
+        <label for="commentaire-final">Votre commentaire (optionnel)</label>
+        <textarea
+          id="commentaire-final"
+          v-model="formData.commentaire"
+          rows="5"
+          placeholder="Décrivez votre expérience avec la connexion Internet..."
+          class="comment-textarea"
+        ></textarea>
+        <small class="form-help confidential-notice">
+          Ce commentaire est strictement confidentiel.
+          Il est visible uniquement par les administrateurs dans Google Sheets.
+        </small>
+      </div>
+
+      <div class="comment-actions">
+        <button type="button" @click="finalSubmit" :disabled="isSubmitting" class="btn btn-primary btn-large">
+          {{ isSubmitting ? 'Envoi en cours...' : 'Valider et envoyer' }}
+        </button>
+      </div>
+    </div>
+
     <div v-else-if="submitted" class="alert alert-success">
       <h3>Merci pour votre réponse !</h3>
       <p>Votre diagnostic a été enregistré avec succès.</p>
@@ -87,25 +137,6 @@
         </div>
       </fieldset>
 
-      <!-- Section Situation en cas de problème -->
-      <fieldset>
-        <legend>Situation en cas de problème</legend>
-
-        <div class="form-group">
-          <label for="solutionProbleme">
-            En cas de problème de connexion Internet au sein de l'entreprise, utilisez-vous :
-            <span class="required">*</span>
-          </label>
-          <select id="solutionProbleme" v-model="formData.solutionProbleme" required>
-            <option value="">-- Sélectionnez --</option>
-            <option value="Connexion de l'entreprise (fonctionnelle)">Connexion de l'entreprise (fonctionnelle)</option>
-            <option value="Partage de connexion (téléphone)">Partage de connexion (téléphone)</option>
-            <option value="Modem / routeur externe">Modem / routeur externe</option>
-            <option value="Aucune solution (travail bloqué)">Aucune solution (travail bloqué)</option>
-          </select>
-        </div>
-      </fieldset>
-
       <!-- Section Évaluation -->
       <fieldset>
         <legend>Évaluation de l'expérience</legend>
@@ -146,23 +177,22 @@
         </div>
       </fieldset>
 
-      <!-- Section Commentaire -->
+      <!-- Section Situation en cas de problème -->
       <fieldset>
-        <legend>Commentaire (Confidentiel)</legend>
+        <legend>Situation en cas de problème</legend>
 
         <div class="form-group">
-          <label for="commentaire">Commentaire libre</label>
-          <textarea
-            id="commentaire"
-            v-model="formData.commentaire"
-            rows="4"
-            placeholder="Décrivez les problèmes rencontrés, vos suggestions..."
-          ></textarea>
-          <small class="form-help confidential-notice">
-            Ce commentaire est strictement confidentiel.
-            Il est visible uniquement par les administrateurs dans Google Sheets.
-            Il ne sera jamais affiché publiquement.
-          </small>
+          <label for="solutionProbleme">
+            En cas de problème de connexion Internet au sein de l'entreprise, utilisez-vous :
+            <span class="required">*</span>
+          </label>
+          <select id="solutionProbleme" v-model="formData.solutionProbleme" required>
+            <option value="">-- Sélectionnez --</option>
+            <option value="Connexion de l'entreprise (fonctionnelle)">Connexion de l'entreprise (fonctionnelle)</option>
+            <option value="Partage de connexion (téléphone)">Partage de connexion (téléphone)</option>
+            <option value="Modem / routeur externe">Modem / routeur externe</option>
+            <option value="Aucune solution (travail bloqué)">Aucune solution (travail bloqué)</option>
+          </select>
         </div>
       </fieldset>
 
@@ -205,7 +235,8 @@ export default {
       errors: [],
       isSubmitting: false,
       alreadyResponded: false,
-      submitted: false
+      submitted: false,
+      showCommentStep: false
     }
   },
   methods: {
@@ -241,6 +272,21 @@ export default {
         return
       }
 
+      // Afficher la page 2 pour le commentaire
+      this.showCommentStep = true
+
+      // Scroll vers le haut pour voir la page 2
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    },
+
+    useExample(text) {
+      // Pré-remplit le commentaire avec l'exemple cliqué
+      this.formData.commentaire = text
+    },
+
+    async finalSubmit() {
+      this.errors = []
+
       // Collecter données techniques
       const technicalData = getBrowserInfo()
 
@@ -251,7 +297,11 @@ export default {
 
       try {
         await submitResponse(cleanData, technicalData)
+        this.showCommentStep = false
         this.submitted = true
+
+        // Scroll vers le haut pour voir le message de succès
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       } catch (error) {
         this.errors.push(error.message || 'Erreur lors de l\'envoi des données')
       } finally {
@@ -429,5 +479,122 @@ legend {
 
 .btn-secondary:hover {
   background: #cbd5e0;
+}
+
+/* Page 2 - Étape commentaire */
+.comment-step {
+  background: white;
+  padding: 3rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.comment-step-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.success-icon {
+  display: inline-block;
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.comment-step-header h3 {
+  margin: 0.5rem 0;
+  color: #2d3748;
+  font-size: 1.8rem;
+}
+
+.comment-step-subtitle {
+  color: #4a5568;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.comment-examples {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: #f7fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.examples-label {
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.examples-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.btn-example {
+  padding: 0.875rem 1.25rem;
+  background: white;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  color: #2d3748;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+}
+
+.btn-example:hover {
+  background: #edf2f7;
+  border-color: #667eea;
+  transform: translateX(4px);
+}
+
+.comment-textarea-container {
+  margin: 2rem 0;
+}
+
+.comment-textarea-container label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 1rem;
+}
+
+.comment-textarea {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #cbd5e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.comment-textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.comment-actions {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.btn-large {
+  padding: 1rem 3rem;
+  font-size: 1.1rem;
 }
 </style>
