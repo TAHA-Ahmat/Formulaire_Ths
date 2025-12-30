@@ -7,6 +7,14 @@
       <router-link to="/public" class="btn btn-secondary">Voir les réponses</router-link>
     </div>
 
+    <div v-else-if="isChecking" class="loading-screen">
+      <div class="loading-box">
+        <div class="spinner-large"></div>
+        <p class="loading-text">Vérification en cours...</p>
+        <p class="loading-subtext">Veuillez patienter</p>
+      </div>
+    </div>
+
     <div v-else-if="showCommentStep && !isSubmitting" class="comment-step">
       <div class="comment-step-header">
         <h3>Dernière étape</h3>
@@ -204,8 +212,8 @@
       </fieldset>
 
       <div class="form-actions">
-        <button type="submit" :disabled="isSubmitting" class="btn btn-primary">
-          {{ isSubmitting ? 'Vérification...' : 'Suivant' }}
+        <button type="submit" :disabled="isChecking" class="btn btn-primary">
+          {{ isChecking ? 'Vérification...' : 'Suivant' }}
         </button>
       </div>
 
@@ -241,6 +249,7 @@ export default {
       },
       errors: [],
       isSubmitting: false,
+      isChecking: false,
       alreadyResponded: false,
       submitted: false,
       showCommentStep: false
@@ -267,23 +276,35 @@ export default {
         return
       }
 
-      // Vérifier doublon
+      // Afficher l'écran de chargement
+      this.isChecking = true
+
       try {
-        const exists = await checkIfAlreadyResponded(this.formData.nom, this.formData.prenom)
+        // Démarrer un timer de 1.5 secondes minimum
+        const minDelay = new Promise(resolve => setTimeout(resolve, 1500))
+
+        // Vérifier doublon
+        const checkPromise = checkIfAlreadyResponded(this.formData.nom, this.formData.prenom)
+
+        // Attendre les deux
+        const [exists] = await Promise.all([checkPromise, minDelay])
+
         if (exists) {
           this.alreadyResponded = true
+          this.isChecking = false
           return
         }
+
+        // Afficher la page 2 pour le commentaire
+        this.showCommentStep = true
+        this.isChecking = false
+
+        // Scroll vers le haut pour voir la page 2
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       } catch (error) {
         this.errors.push('Erreur lors de la vérification des doublons')
-        return
+        this.isChecking = false
       }
-
-      // Afficher la page 2 pour le commentaire
-      this.showCommentStep = true
-
-      // Scroll vers le haut pour voir la page 2
-      window.scrollTo({ top: 0, behavior: 'smooth' })
     },
 
     useExample(text) {
