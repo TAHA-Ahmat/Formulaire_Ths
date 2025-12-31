@@ -36,6 +36,12 @@
         </small>
       </div>
 
+      <div class="comment-actions">
+        <button type="button" @click="finalSubmit" class="btn btn-primary btn-large">
+          Envoyer et terminer
+        </button>
+      </div>
+
       <div class="comment-examples">
         <p class="examples-label">Exemples de commentaires sur votre expérience 2025 :</p>
         <div class="examples-buttons">
@@ -55,12 +61,6 @@
             Aucun problème particulier à signaler pour l'année 2025
           </button>
         </div>
-      </div>
-
-      <div class="comment-actions">
-        <button type="button" @click="finalSubmit" class="btn btn-primary btn-large">
-          Envoyer et terminer
-        </button>
       </div>
     </div>
 
