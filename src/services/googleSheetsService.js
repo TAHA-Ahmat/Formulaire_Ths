@@ -46,10 +46,15 @@ export async function submitResponse(formData, technicalData) {
       prenom: formData.prenom,
       service: formData.service,
       poste: formData.poste || '',
+      // Nouveaux champs factuels
+      frequenceProblemes: formData.frequenceProblemes,
+      dureePanne: formData.dureePanne,
+      momentJournee: formData.momentJournee,
+      tachesImpossibles: formData.tachesImpossibles, // Array
+      tempsPerdu: formData.tempsPerdu,
+      impactEcheances: formData.impactEcheances,
       solutionProbleme: formData.solutionProbleme,
-      qualitePercue: formData.qualitePercue,
-      stabilite: formData.stabilite,
-      impact: formData.impact,
+      delaiSolution: formData.delaiSolution,
       commentaire: formData.commentaire || '',
 
       // Données techniques

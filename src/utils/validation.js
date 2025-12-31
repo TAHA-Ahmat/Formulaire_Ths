@@ -36,8 +36,8 @@ export function validateFormData(formData) {
   }
 
   // Impact opérationnel
-  if (!formData.tachesImpossibles || formData.tachesImpossibles === '') {
-    errors.push('Les tâches impossibles sont obligatoires')
+  if (!formData.tachesImpossibles || formData.tachesImpossibles.length === 0) {
+    errors.push('Vous devez sélectionner au moins une tâche')
   }
 
   if (!formData.tempsPerdu || formData.tempsPerdu === '') {
@@ -78,7 +78,7 @@ export function sanitizeFormData(formData) {
     dureePanne: formData.dureePanne,
     momentJournee: formData.momentJournee,
     // Impact opérationnel
-    tachesImpossibles: formData.tachesImpossibles,
+    tachesImpossibles: Array.isArray(formData.tachesImpossibles) ? formData.tachesImpossibles : [],
     tempsPerdu: formData.tempsPerdu,
     impactEcheances: formData.impactEcheances,
     // Réaction en cas de panne
