@@ -543,13 +543,6 @@ export default {
 </script>
 
 <style scoped>
-/* Variables CSS */
-:root {
-  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --primary-color: #667eea;
-  --card-spacing: 2rem;
-}
-
 .form-container {
   max-width: 900px;
   margin: 0 auto;
@@ -590,7 +583,7 @@ export default {
 
 .progress-fill {
   height: 100%;
-  background: var(--primary-gradient);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 10px;
 }
@@ -642,7 +635,7 @@ export default {
   background: white;
   border-radius: 12px;
   padding: 2rem;
-  margin-bottom: var(--card-spacing);
+  margin-bottom: 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border: 2px solid #e2e8f0;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -819,7 +812,7 @@ export default {
 }
 
 .btn-primary {
-  background: var(--primary-gradient);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
