@@ -18,28 +18,7 @@
     <div v-else-if="showCommentStep && !isSubmitting" class="comment-step">
       <div class="comment-step-header">
         <h3>Dernière étape</h3>
-        <p class="comment-step-subtitle">Décrivez votre expérience avec la connexion Internet (optionnel)</p>
-      </div>
-
-      <div class="comment-examples">
-        <p class="examples-label">Exemples de commentaires :</p>
-        <div class="examples-buttons">
-          <button type="button" @click="useExample('La connexion est très lente, surtout le matin')" class="btn-example">
-            La connexion est très lente, surtout le matin
-          </button>
-          <button type="button" @click="useExample('Coupures fréquentes plusieurs fois par jour')" class="btn-example">
-            Coupures fréquentes plusieurs fois par jour
-          </button>
-          <button type="button" @click="useExample('Impossible de télécharger ou envoyer des fichiers lourds')" class="btn-example">
-            Impossible de télécharger/envoyer des fichiers lourds
-          </button>
-          <button type="button" @click="useExample('La connexion est stable et satisfaisante')" class="btn-example">
-            La connexion est stable et satisfaisante
-          </button>
-          <button type="button" @click="useExample('Aucun problème particulier à signaler')" class="btn-example">
-            Aucun problème particulier à signaler
-          </button>
-        </div>
+        <p class="comment-step-subtitle">Partagez votre expérience de l'année 2025 concernant la connexion Internet (optionnel)</p>
       </div>
 
       <div class="comment-textarea-container">
@@ -48,13 +27,34 @@
           id="commentaire-final"
           v-model="formData.commentaire"
           rows="5"
-          placeholder="Décrivez votre expérience avec la connexion Internet..."
+          placeholder="Décrivez votre expérience avec la connexion Internet durant l'année 2025..."
           class="comment-textarea"
         ></textarea>
         <small class="form-help confidential-notice">
           Ce commentaire est strictement confidentiel.
-          Il est visible uniquement par les administrateurs dans Google Sheets.
+          Il est visible uniquement par la direction et la comptabilité.
         </small>
+      </div>
+
+      <div class="comment-examples">
+        <p class="examples-label">Exemples de commentaires sur votre expérience 2025 :</p>
+        <div class="examples-buttons">
+          <button type="button" @click="useExample('En 2025, la connexion était très lente, surtout le matin')" class="btn-example">
+            En 2025, la connexion était très lente, surtout le matin
+          </button>
+          <button type="button" @click="useExample('Coupures fréquentes plusieurs fois par jour durant toute l\'année')" class="btn-example">
+            Coupures fréquentes plusieurs fois par jour durant toute l'année
+          </button>
+          <button type="button" @click="useExample('Impossible de télécharger ou envoyer des fichiers lourds en 2025')" class="btn-example">
+            Impossible de télécharger/envoyer des fichiers lourds en 2025
+          </button>
+          <button type="button" @click="useExample('La connexion a été stable et satisfaisante tout au long de 2025')" class="btn-example">
+            La connexion a été stable et satisfaisante tout au long de 2025
+          </button>
+          <button type="button" @click="useExample('Aucun problème particulier à signaler pour l\'année 2025')" class="btn-example">
+            Aucun problème particulier à signaler pour l'année 2025
+          </button>
+        </div>
       </div>
 
       <div class="comment-actions">
@@ -73,16 +73,18 @@
     </div>
 
     <div v-else-if="submitted" class="alert alert-success">
-      <h3>Merci pour votre réponse !</h3>
-      <p>Votre diagnostic a été enregistré avec succès.</p>
+      <h3>Merci pour votre participation !</h3>
+      <p>Votre bilan 2025 a été enregistré avec succès.</p>
+      <p><strong>Vos retours nous permettront d'améliorer la connexion Internet en 2026. Bonne année !</strong></p>
       <router-link to="/public" class="btn btn-primary">Voir toutes les réponses</router-link>
     </div>
 
     <form v-else @submit.prevent="handleSubmit" class="diagnostic-form">
-      <h2>Diagnostic de connexion Internet THS</h2>
+      <h2>Bilan Connexion Internet 2025 - THS</h2>
       <p class="form-description">
-        Ce formulaire permet d'évaluer la qualité réelle de la connexion Internet au sein de THS.
-        Vos réponses sont strictement confidentielles.
+        <strong>Bonne année 2026 !</strong><br>
+        Afin d'améliorer la qualité de la connexion Internet en 2026, nous souhaitons recueillir votre ressenti sur l'année 2025.
+        Vos réponses sont strictement confidentielles et nous permettront d'identifier les axes d'amélioration prioritaires.
       </p>
 
       <!-- Erreurs -->
@@ -154,10 +156,10 @@
 
       <!-- Section Évaluation -->
       <fieldset>
-        <legend>Évaluation de l'expérience</legend>
+        <legend>Votre expérience en 2025</legend>
 
         <div class="form-group">
-          <label for="qualitePercue">Qualité perçue <span class="required">*</span></label>
+          <label for="qualitePercue">Comment évaluez-vous la qualité de la connexion Internet durant l'année 2025 ? <span class="required">*</span></label>
           <select id="qualitePercue" v-model="formData.qualitePercue" required>
             <option value="">-- Sélectionnez --</option>
             <option value="Très mauvaise">Très mauvaise</option>
@@ -169,7 +171,7 @@
         </div>
 
         <div class="form-group">
-          <label for="stabilite">Stabilité <span class="required">*</span></label>
+          <label for="stabilite">Comment évaluez-vous la stabilité de la connexion Internet en 2025 ? <span class="required">*</span></label>
           <select id="stabilite" v-model="formData.stabilite" required>
             <option value="">-- Sélectionnez --</option>
             <option value="Très instable">Très instable</option>
@@ -180,7 +182,7 @@
         </div>
 
         <div class="form-group">
-          <label for="impact">Impact sur le travail <span class="required">*</span></label>
+          <label for="impact">Quel a été l'impact de la connexion Internet sur votre travail en 2025 ? <span class="required">*</span></label>
           <select id="impact" v-model="formData.impact" required>
             <option value="">-- Sélectionnez --</option>
             <option value="Aucun impact">Aucun impact</option>
@@ -194,19 +196,19 @@
 
       <!-- Section Situation en cas de problème -->
       <fieldset>
-        <legend>Situation en cas de problème</legend>
+        <legend>Votre réaction en cas de panne (bilan 2025)</legend>
 
         <div class="form-group">
           <label for="solutionProbleme">
-            En cas de problème de connexion Internet au sein de l'entreprise, utilisez-vous :
+            En 2025, lorsque la connexion Internet fournie par THS ne fonctionnait pas, quelle était généralement votre réaction :
             <span class="required">*</span>
           </label>
           <select id="solutionProbleme" v-model="formData.solutionProbleme" required>
             <option value="">-- Sélectionnez --</option>
-            <option value="Connexion de l'entreprise (fonctionnelle)">Connexion de l'entreprise (fonctionnelle)</option>
-            <option value="Partage de connexion (téléphone)">Partage de connexion (téléphone)</option>
-            <option value="Modem / routeur externe">Modem / routeur externe</option>
-            <option value="Aucune solution (travail bloqué)">Aucune solution (travail bloqué)</option>
+            <option value="J'attendais que la connexion THS se rétablisse">J'attendais que la connexion THS se rétablisse</option>
+            <option value="J'utilisais mon partage de connexion (téléphone)">J'utilisais mon partage de connexion (téléphone)</option>
+            <option value="J'utilisais un modem/routeur externe personnel">J'utilisais un modem/routeur externe personnel</option>
+            <option value="Je ne pouvais plus travailler (travail bloqué)">Je ne pouvais plus travailler (travail bloqué)</option>
           </select>
         </div>
       </fieldset>

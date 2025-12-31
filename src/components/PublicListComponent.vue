@@ -61,9 +61,8 @@
       <div class="info-box">
         <h3>Informations</h3>
         <ul>
-          <li>Les commentaires sont <strong>strictement confidentiels</strong> et visibles uniquement par les administrateurs dans Google Sheets.</li>
+          <li>Les commentaires sont <strong>strictement confidentiels</strong> et visibles uniquement par la Direction et la Comptabilité</li>
           <li>Cette liste affiche uniquement : Nom, Prénom, Service et Date de réponse.</li>
-          <li>Une personne = une seule réponse (clé d'unicité : Nom + Prénom).</li>
         </ul>
       </div>
 

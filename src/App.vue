@@ -5,8 +5,8 @@
         <div class="header-content">
           <img src="/logoths.jpg" alt="Logo THS" class="logo-ths" />
           <div class="header-text">
-            <h1>Diagnostic Connexion Internet</h1>
-            <p class="header-subtitle">Chad Handling Services</p>
+            <h1>Bilan Connexion Internet 2025</h1>
+            <p class="header-subtitle">Tchad Handling Services</p>
           </div>
         </div>
         <nav class="app-nav">
@@ -24,7 +24,7 @@
 
     <footer class="app-footer">
       <div class="container">
-        <p>&copy; 2025 - Chad Handling Services (THS)</p>
+        <p>&copy; 2025 - Tchad Handling Services (THS)</p>
       </div>
     </footer>
   </div>
