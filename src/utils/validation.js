@@ -9,7 +9,7 @@
 export function validateFormData(formData) {
   const errors = []
 
-  // Champs obligatoires
+  // Identification
   if (!formData.nom || formData.nom.trim() === '') {
     errors.push('Le nom est obligatoire')
   }
@@ -22,20 +22,39 @@ export function validateFormData(formData) {
     errors.push('Le service est obligatoire')
   }
 
+  // Fréquence des incidents
+  if (!formData.frequenceProblemes || formData.frequenceProblemes === '') {
+    errors.push('La fréquence des problèmes est obligatoire')
+  }
+
+  if (!formData.dureePanne || formData.dureePanne === '') {
+    errors.push('La durée moyenne des pannes est obligatoire')
+  }
+
+  if (!formData.momentJournee || formData.momentJournee === '') {
+    errors.push('Le moment de la journée est obligatoire')
+  }
+
+  // Impact opérationnel
+  if (!formData.tachesImpossibles || formData.tachesImpossibles === '') {
+    errors.push('Les tâches impossibles sont obligatoires')
+  }
+
+  if (!formData.tempsPerdu || formData.tempsPerdu === '') {
+    errors.push('Le temps perdu par incident est obligatoire')
+  }
+
+  if (!formData.impactEcheances || formData.impactEcheances === '') {
+    errors.push("L'impact sur les échéances est obligatoire")
+  }
+
+  // Réaction en cas de panne
   if (!formData.solutionProbleme || formData.solutionProbleme === '') {
-    errors.push('La solution en cas de problème est obligatoire')
+    errors.push('La réaction en cas de problème est obligatoire')
   }
 
-  if (!formData.qualitePercue || formData.qualitePercue === '') {
-    errors.push('La qualité perçue est obligatoire')
-  }
-
-  if (!formData.stabilite || formData.stabilite === '') {
-    errors.push('La stabilité est obligatoire')
-  }
-
-  if (!formData.impact || formData.impact === '') {
-    errors.push("L'impact sur le travail est obligatoire")
+  if (!formData.delaiSolution || formData.delaiSolution === '') {
+    errors.push('Le délai avant solution alternative est obligatoire')
   }
 
   return {
@@ -49,14 +68,23 @@ export function validateFormData(formData) {
  */
 export function sanitizeFormData(formData) {
   return {
+    // Identification
     nom: formData.nom.trim(),
     prenom: formData.prenom.trim(),
     service: formData.service,
     poste: formData.poste?.trim() || '',
+    // Fréquence des incidents
+    frequenceProblemes: formData.frequenceProblemes,
+    dureePanne: formData.dureePanne,
+    momentJournee: formData.momentJournee,
+    // Impact opérationnel
+    tachesImpossibles: formData.tachesImpossibles,
+    tempsPerdu: formData.tempsPerdu,
+    impactEcheances: formData.impactEcheances,
+    // Réaction en cas de panne
     solutionProbleme: formData.solutionProbleme,
-    qualitePercue: formData.qualitePercue,
-    stabilite: formData.stabilite,
-    impact: formData.impact,
+    delaiSolution: formData.delaiSolution,
+    // Commentaire
     commentaire: formData.commentaire?.trim() || ''
   }
 }
