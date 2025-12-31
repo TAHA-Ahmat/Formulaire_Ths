@@ -2,10 +2,23 @@
   <div class="form-container">
     <!-- Barre de progression fixe -->
     <div v-if="!alreadyResponded && !submitted && !isChecking && !isSubmitting && !showCommentStep" class="progress-bar-container">
+      <div class="progress-steps">
+        <div
+          v-for="step in totalCards"
+          :key="step"
+          class="progress-step"
+          :class="{ 'active': step === currentStep, 'completed': step < currentStep }"
+        >
+          <div class="step-circle">
+            <span v-if="step < currentStep">✓</span>
+            <span v-else>{{ step }}</span>
+          </div>
+          <div class="step-label">Étape {{ step }}</div>
+        </div>
+      </div>
       <div class="progress-bar">
         <div class="progress-fill" :style="{ width: progressPercentage + '%' }"></div>
       </div>
-      <p class="progress-text">{{ completedCards }}/{{ totalCards }} étapes complétées</p>
     </div>
 
     <div v-if="alreadyResponded" class="alert alert-warning">
@@ -105,7 +118,7 @@
       </div>
 
       <!-- CARTE 1 : Identification -->
-      <div class="form-card" :class="{ 'card-completed': isCardCompleted('identification') }" ref="card1">
+      <div v-show="currentStep === 1" class="form-card card-step" :class="{ 'card-completed': isCardCompleted('identification') }" ref="card1">
         <div class="card-header">
           <div class="card-icon">👤</div>
           <div class="card-title-group">
@@ -178,7 +191,7 @@
       </div>
 
       <!-- CARTE 2 : Fréquence des incidents -->
-      <div class="form-card" :class="{ 'card-completed': isCardCompleted('frequence') }" ref="card2">
+      <div v-show="currentStep === 2" class="form-card card-step" :class="{ 'card-completed': isCardCompleted('frequence') }" ref="card2">
         <div class="card-header">
           <div class="card-icon">📊</div>
           <div class="card-title-group">
@@ -239,7 +252,7 @@
       </div>
 
       <!-- CARTE 3 : Impact opérationnel -->
-      <div class="form-card" :class="{ 'card-completed': isCardCompleted('impact') }" ref="card3">
+      <div v-show="currentStep === 3" class="form-card card-step" :class="{ 'card-completed': isCardCompleted('impact') }" ref="card3">
         <div class="card-header">
           <div class="card-icon">💼</div>
           <div class="card-title-group">
@@ -253,21 +266,78 @@
 
         <div class="card-content">
           <div class="form-group">
-            <label for="tachesImpossibles">
+            <label>
               Quelles tâches étaient impossibles ou très difficiles à cause de la connexion ?
               <span class="required">*</span>
+              <span class="helper-text">(Plusieurs choix possibles)</span>
             </label>
-            <select id="tachesImpossibles" v-model="formData.tachesImpossibles" @change="updateProgress" required>
-              <option value="">-- Sélectionnez --</option>
-              <option value="Envoi/réception d'emails">Envoi/réception d'emails</option>
-              <option value="Accès aux logiciels métier en ligne">Accès aux logiciels métier en ligne</option>
-              <option value="Téléchargement/envoi de fichiers">Téléchargement/envoi de fichiers</option>
-              <option value="Visioconférence">Visioconférence</option>
-              <option value="Navigation web professionnelle">Navigation web professionnelle</option>
-              <option value="Plusieurs de ces tâches">Plusieurs de ces tâches</option>
-              <option value="Toutes ces tâches">Toutes ces tâches</option>
-              <option value="Aucune difficulté particulière">Aucune difficulté particulière</option>
-            </select>
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  value="Envoi/réception d'emails"
+                  v-model="formData.tachesImpossibles"
+                  @change="updateProgress"
+                />
+                <span class="checkbox-custom"></span>
+                <span class="checkbox-text">Envoi/réception d'emails</span>
+              </label>
+
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  value="Accès aux logiciels métier en ligne"
+                  v-model="formData.tachesImpossibles"
+                  @change="updateProgress"
+                />
+                <span class="checkbox-custom"></span>
+                <span class="checkbox-text">Accès aux logiciels métier en ligne</span>
+              </label>
+
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  value="Téléchargement/envoi de fichiers"
+                  v-model="formData.tachesImpossibles"
+                  @change="updateProgress"
+                />
+                <span class="checkbox-custom"></span>
+                <span class="checkbox-text">Téléchargement/envoi de fichiers</span>
+              </label>
+
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  value="Visioconférence"
+                  v-model="formData.tachesImpossibles"
+                  @change="updateProgress"
+                />
+                <span class="checkbox-custom"></span>
+                <span class="checkbox-text">Visioconférence</span>
+              </label>
+
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  value="Navigation web professionnelle"
+                  v-model="formData.tachesImpossibles"
+                  @change="updateProgress"
+                />
+                <span class="checkbox-custom"></span>
+                <span class="checkbox-text">Navigation web professionnelle</span>
+              </label>
+
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  value="Aucune difficulté particulière"
+                  v-model="formData.tachesImpossibles"
+                  @change="updateProgress"
+                />
+                <span class="checkbox-custom"></span>
+                <span class="checkbox-text">Aucune difficulté particulière</span>
+              </label>
+            </div>
           </div>
 
           <div class="form-group">
@@ -302,7 +372,7 @@
       </div>
 
       <!-- CARTE 4 : Réaction en cas de panne -->
-      <div class="form-card" :class="{ 'card-completed': isCardCompleted('reaction') }" ref="card4">
+      <div v-show="currentStep === 4" class="form-card card-step" :class="{ 'card-completed': isCardCompleted('reaction') }" ref="card4">
         <div class="card-header">
           <div class="card-icon">🔧</div>
           <div class="card-title-group">
@@ -347,8 +417,32 @@
       </div>
 
       <div class="form-actions">
-        <button type="submit" :disabled="isChecking || !allCardsCompleted" class="btn btn-primary btn-submit">
-          {{ isChecking ? 'Vérification...' : 'Suivant' }}
+        <button
+          v-if="currentStep > 1"
+          type="button"
+          @click="previousStep"
+          class="btn btn-secondary btn-nav"
+        >
+          ← Précédent
+        </button>
+
+        <button
+          v-if="currentStep < totalCards"
+          type="button"
+          @click="nextStep"
+          :disabled="!isCurrentStepCompleted"
+          class="btn btn-primary btn-nav"
+        >
+          Suivant →
+        </button>
+
+        <button
+          v-if="currentStep === totalCards"
+          type="submit"
+          :disabled="isChecking || !allCardsCompleted"
+          class="btn btn-primary btn-submit"
+        >
+          {{ isChecking ? 'Vérification...' : 'Terminer' }}
         </button>
       </div>
 
@@ -379,7 +473,7 @@ export default {
         frequenceProblemes: '',
         dureePanne: '',
         momentJournee: '',
-        tachesImpossibles: '',
+        tachesImpossibles: [],
         tempsPerdu: '',
         impactEcheances: '',
         solutionProbleme: '',
@@ -392,7 +486,8 @@ export default {
       alreadyResponded: false,
       submitted: false,
       showCommentStep: false,
-      totalCards: 4
+      totalCards: 4,
+      currentStep: 1
     }
   },
   computed: {
@@ -405,10 +500,19 @@ export default {
       return count
     },
     progressPercentage() {
-      return (this.completedCards / this.totalCards) * 100
+      return ((this.currentStep - 1) / (this.totalCards - 1)) * 100
     },
     allCardsCompleted() {
       return this.completedCards === this.totalCards
+    },
+    isCurrentStepCompleted() {
+      switch(this.currentStep) {
+        case 1: return this.isCardCompleted('identification')
+        case 2: return this.isCardCompleted('frequence')
+        case 3: return this.isCardCompleted('impact')
+        case 4: return this.isCardCompleted('reaction')
+        default: return false
+      }
     }
   },
   methods: {
@@ -419,7 +523,7 @@ export default {
         case 'frequence':
           return this.formData.frequenceProblemes && this.formData.dureePanne && this.formData.momentJournee
         case 'impact':
-          return this.formData.tachesImpossibles && this.formData.tempsPerdu && this.formData.impactEcheances
+          return this.formData.tachesImpossibles.length > 0 && this.formData.tempsPerdu && this.formData.impactEcheances
         case 'reaction':
           return this.formData.solutionProbleme && this.formData.delaiSolution
         default:
@@ -429,24 +533,17 @@ export default {
     updateProgress() {
       // Trigger reactivity update
       this.$forceUpdate()
-
-      // Auto-scroll to next incomplete card
-      this.$nextTick(() => {
-        this.scrollToNextIncompleteCard()
-      })
     },
-    scrollToNextIncompleteCard() {
-      const cards = ['identification', 'frequence', 'impact', 'reaction']
-      for (let i = 0; i < cards.length; i++) {
-        if (!this.isCardCompleted(cards[i])) {
-          const cardRef = this.$refs[`card${i + 1}`]
-          if (cardRef && cardRef !== document.activeElement) {
-            setTimeout(() => {
-              cardRef.scrollIntoView({ behavior: 'smooth', block: 'center' })
-            }, 300)
-          }
-          break
-        }
+    nextStep() {
+      if (this.currentStep < this.totalCards && this.isCurrentStepCompleted) {
+        this.currentStep++
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+    },
+    previousStep() {
+      if (this.currentStep > 1) {
+        this.currentStep--
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       }
     },
     async checkDuplicate() {
@@ -555,7 +652,7 @@ export default {
   top: 0;
   z-index: 100;
   background: white;
-  padding: 1rem 0;
+  padding: 1.5rem 0;
   margin-bottom: 2rem;
   border-bottom: 1px solid #e2e8f0;
   animation: slideDown 0.3s ease-out;
@@ -572,28 +669,93 @@ export default {
   }
 }
 
+.progress-steps {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.progress-steps::before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: #e2e8f0;
+  z-index: 0;
+}
+
+.progress-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.step-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: white;
+  border: 3px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #a0aec0;
+  transition: all 0.3s ease;
+  margin-bottom: 0.5rem;
+}
+
+.progress-step.active .step-circle {
+  border-color: #667eea;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+  transform: scale(1.1);
+}
+
+.progress-step.completed .step-circle {
+  border-color: #48bb78;
+  background: #48bb78;
+  color: white;
+}
+
+.step-label {
+  font-size: 0.75rem;
+  color: #a0aec0;
+  font-weight: 500;
+  text-align: center;
+}
+
+.progress-step.active .step-label {
+  color: #667eea;
+  font-weight: 600;
+}
+
+.progress-step.completed .step-label {
+  color: #48bb78;
+  font-weight: 500;
+}
+
 .progress-bar {
   width: 100%;
   height: 8px;
   background: #e2e8f0;
   border-radius: 10px;
   overflow: hidden;
-  margin-bottom: 0.5rem;
 }
 
 .progress-fill {
   height: 100%;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 10px;
-}
-
-.progress-text {
-  text-align: center;
-  font-size: 0.875rem;
-  color: #4a5568;
-  font-weight: 500;
-  margin: 0;
 }
 
 /* Form Header */
@@ -639,17 +801,21 @@ export default {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border: 2px solid #e2e8f0;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: cardSlideIn 0.4s ease-out;
+  min-height: 500px;
 }
 
-@keyframes cardSlideIn {
+.card-step {
+  animation: cardFadeIn 0.4s ease-out;
+}
+
+@keyframes cardFadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateX(30px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
   }
 }
 
@@ -792,10 +958,93 @@ export default {
   font-weight: 600;
 }
 
+.helper-text {
+  color: #718096;
+  font-weight: 400;
+  font-size: 0.875rem;
+  margin-left: 0.5rem;
+}
+
+/* Checkbox Group */
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.875rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.checkbox-label:hover {
+  border-color: #cbd5e0;
+  background: #f7fafc;
+}
+
+.checkbox-label input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkbox-custom {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #cbd5e0;
+  border-radius: 4px;
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.checkbox-label input[type="checkbox"]:checked ~ .checkbox-custom {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+}
+
+.checkbox-label input[type="checkbox"]:checked ~ .checkbox-custom::after {
+  content: '✓';
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  position: absolute;
+}
+
+.checkbox-label input[type="checkbox"]:checked ~ .checkbox-text {
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.checkbox-label input[type="checkbox"]:focus ~ .checkbox-custom {
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.checkbox-text {
+  flex: 1;
+  color: #4a5568;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
 /* Form Actions */
 .form-actions {
   margin-top: 3rem;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
   padding: 2rem 0;
 }
 
@@ -828,9 +1077,16 @@ export default {
   transform: none;
 }
 
+.btn-nav {
+  padding: 0.875rem 2rem;
+  font-size: 1rem;
+  min-width: 150px;
+}
+
 .btn-submit {
   padding: 1.125rem 3rem;
   font-size: 1.125rem;
+  min-width: 200px;
 }
 
 .btn-secondary {
@@ -1074,6 +1330,30 @@ export default {
   .form-card {
     padding: 1.5rem;
     margin-bottom: 1.5rem;
+    min-height: 400px;
+  }
+
+  .progress-steps {
+    margin-bottom: 1rem;
+  }
+
+  .step-circle {
+    width: 35px;
+    height: 35px;
+    font-size: 0.875rem;
+  }
+
+  .step-label {
+    font-size: 0.7rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn-nav,
+  .btn-submit {
+    width: 100%;
   }
 
   .card-header {
