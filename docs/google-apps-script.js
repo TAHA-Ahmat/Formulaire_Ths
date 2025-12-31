@@ -130,15 +130,25 @@ function submitResponse(data) {
 
   // Ajouter la réponse
   const timestamp = new Date().toISOString();
+
+  // Convertir tachesImpossibles (array) en string
+  const tachesImpossiblesStr = Array.isArray(data.tachesImpossibles)
+    ? data.tachesImpossibles.join(', ')
+    : data.tachesImpossibles || '';
+
   const row = [
     data.nom,
     data.prenom,
     data.service,
     data.poste || '',
+    data.frequenceProblemes,
+    data.dureePanne,
+    data.momentJournee,
+    tachesImpossiblesStr,
+    data.tempsPerdu,
+    data.impactEcheances,
     data.solutionProbleme,
-    data.qualitePercue,
-    data.stabilite,
-    data.impact,
+    data.delaiSolution,
     data.commentaire || '',
     data.browser,
     data.browserVersion,
@@ -177,8 +187,8 @@ function getPublicList() {
 
   // Lire seulement les colonnes 1, 2, 3 (Nom, Prénom, Service)
   const basicData = sheet.getRange(2, 1, lastRow - 1, 3).getValues();
-  // Lire la colonne 18 (Date/Heure)
-  const timestamps = sheet.getRange(2, 18, lastRow - 1, 1).getValues();
+  // Lire la colonne 22 (Date/Heure) - nouvelle position
+  const timestamps = sheet.getRange(2, 22, lastRow - 1, 1).getValues();
 
   const responses = [];
 
@@ -225,11 +235,15 @@ function getSheet() {
       'Prénom',
       'Service',
       'Poste',
-      'Solution en cas de problème',
-      'Qualité Perçue',
-      'Stabilité',
-      'Impact',
-      'Commentaire (Admin)',
+      'Fréquence Problèmes',
+      'Durée Panne',
+      'Moment Journée',
+      'Tâches Impossibles',
+      'Temps Perdu/Incident',
+      'Impact Échéances',
+      'Réaction en Panne',
+      'Délai Solution Alternative',
+      'Commentaire (Confidentiel)',
       'Navigateur',
       'Version Navigateur',
       'OS',
